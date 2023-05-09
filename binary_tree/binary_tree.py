@@ -1,16 +1,7 @@
 import turtle
-screen = turtle.Screen()
-
-# Setup
-turtle.setup(900,900)
-turtle.seth(90)
-turtle.penup()
-turtle.goto(0, -450)
-turtle.pendown()
 
 
 def leaf(x):
-    # x = x*(ratio**n)
     x = x / 2
     turtle.fd(x)
     turtle.penup()
@@ -22,7 +13,7 @@ def branch(x):
     turtle.fd(x)
 
 
-def runner(secuence, x):
+def runner(secuence, x, r):
     # Store in the stack the previous position and direction
     stack = []
     # Repeat for every char in the secuence
@@ -33,10 +24,10 @@ def runner(secuence, x):
         # The inner branches
         elif char == "1":
             branch(x)
-        # Append current position and direction and turn left 45°
+        # Append current position and direction and turn left by r
         elif char == "[":
             stack.append((turtle.heading(), turtle.pos()))
-            turtle.left(45)
+            turtle.left(r)
         #Pop the last position and direction and goto them
         elif char == "]":
             # Pop the last position and direction from the stack
@@ -47,8 +38,8 @@ def runner(secuence, x):
             turtle.penup()
             turtle.goto(pos)
             turtle.pendown()
-            # Turn right by 45°
-            turtle.right(45)
+            # Turn right by r
+            turtle.right(r)
 
 def builder(n):
     # Base secuence
@@ -66,7 +57,7 @@ def builder(n):
             elif char == "]":
                 iteration_buffer.append("]")
             elif char == "1":
-                iteration_buffer.append("11")
+                iteration_buffer.append("1")
             elif char == "0":
                 iteration_buffer.append("1[0]0")
         # Define the secuence as the buffer and empty the buffer for the next iteration
@@ -76,13 +67,26 @@ def builder(n):
     return secuence
 
 if __name__ == "__main__":
+    screen = turtle.Screen()
+
+    # Proportions
+    WITDH = 900
+    HEIGHT = 900
+
+    # Setup
+    turtle.setup(WITDH, HEIGHT)
+    turtle.seth(90)
+    turtle.penup()
+    # turtle.goto(0, -HEIGHT/2)
+    turtle.pendown()
+
     # Binary tree example
     turtle.tracer(0, 0)
 
-    n = 5
+    n = 12
     built_secuence = builder(n)
     print(built_secuence)
-    runner(built_secuence, 20)
+    runner(built_secuence, 20, 45)
 
     turtle.update()
 
