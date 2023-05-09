@@ -1,60 +1,90 @@
 import turtle
-import math as m
 screen = turtle.Screen()
 
-#setup
+# Setup
 turtle.setup(900,900)
-turtle.left(90)
+turtle.seth(90)
+turtle.penup()
+turtle.goto(0, -450)
+turtle.pendown()
+
 
 def leaf(x):
+    # x = x*(ratio**n)
+    x = x / 2
     turtle.fd(x)
-    turtle.backward(x)
+    turtle.penup()
+    turtle.back(x)
+    turtle.pendown()
 
 def branch(x):
+    # x = x*(ratio**n)
     turtle.fd(x)
 
-def push(x):
-    turtle.left(45)
-    branch(x)
 
-def pop(x):
-    turtle.right(45)
-    branch(x)
-
-def builder(path):
-    for char in path:
-        if char == "0":
-            path = path.replace("0", "1[0]0")
-        if char == "1":
-            path = path.replace('1', '11')
-    return path
-
-def runner(path, x):
-    for char in path:
+def runner(secuence, x):
+    # Store in the stack the previous position and direction
+    stack = []
+    # Repeat for every char in the secuence
+    for char in secuence:
+        # The outer branches
         if char == "0":
             leaf(x)
+        # The inner branches
         elif char == "1":
             branch(x)
+        # Append current position and direction and turn left 45°
         elif char == "[":
-            push(x)
+            stack.append((turtle.heading(), turtle.pos()))
+            turtle.left(45)
+        #Pop the last position and direction and goto them
         elif char == "]":
-            pop(x)
-        
+            # Pop the last position and direction from the stack
+            head, pos = stack.pop(-1)
+            # Set direction
+            turtle.seth(head)
+            # Do not draw trayectory to popped position
+            turtle.penup()
+            turtle.goto(pos)
+            turtle.pendown()
+            # Turn right by 45°
+            turtle.right(45)
 
-#Binary tree
-n = 1
-secuence = "0"
-secuence = builder(secuence)
+def builder(n):
+    # Base secuence
+    secuence = "0"
+    iteration_buffer = []
+    # For amount of iterations (n), for each character in the secuence replace 
+    # the character by its rule:
+    # "[]" -> Constant, they pass to the buffer as is
+    # "1" -> "11"
+    # "0" -> 1[0]0
+    for _ in range(n):
+        for char in secuence:
+            if char == "[":
+                iteration_buffer.append("[")
+            elif char == "]":
+                iteration_buffer.append("]")
+            elif char == "1":
+                iteration_buffer.append("11")
+            elif char == "0":
+                iteration_buffer.append("1[0]0")
+        # Define the secuence as the buffer and empty the buffer for the next iteration
+        secuence = "".join(iteration_buffer)
+        iteration_buffer = []
+    # At the end return the last defined secuence
+    return secuence
 
-runner(secuence, 100)
+if __name__ == "__main__":
+    # Binary tree example
+    turtle.tracer(0, 0)
 
+    n = 5
+    built_secuence = builder(n)
+    print(built_secuence)
+    runner(built_secuence, 20)
 
+    turtle.update()
 
-
-
-    
-    
-
-turtle.exitonclick()
-
-
+    #Mantain oppened
+    turtle.exitonclick()
