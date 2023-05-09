@@ -66,6 +66,11 @@ def builder(n):
     # At the end return the last defined secuence
     return secuence
 
+def go_home():
+    turtle.penup()
+    turtle.goto(0, 0)
+    turtle.pendown()
+
 if __name__ == "__main__":
     screen = turtle.Screen()
 
