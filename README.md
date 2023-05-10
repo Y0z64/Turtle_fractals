@@ -2,4 +2,5 @@
 Learning some basic fractal L-system algorithms using turtle graphics in python
 Will be posting my experiments here
 
-![image](https://user-images.githubusercontent.com/112516101/237057871-e5326b54-4bd2-4b87-beec-4b4bfa54d480.png)
+![image](https://github.com/Y0z64/Turtle_fractals/assets/112516101/3e80bab4-4b99-4d8d-af8d-332676e4eb3c)
+
