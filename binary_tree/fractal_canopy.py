@@ -31,7 +31,7 @@ HEIGHT = 900
 
 turtle.setup(WIDTH, HEIGHT)
 turtle.penup()
-turtle.goto(0, -HEIGHT/2+100)
+turtle.goto(0, -HEIGHT/2+200)
 turtle.pendown()
 turtle.seth(90)
 
@@ -42,17 +42,19 @@ turtle.tracer(0, 0)
 turtle.seth(90)
 n = 13
 x = 250
-l_theta = 20
-r_theta = 90
-l_r = 0.7
-r_r = 0.7
+l_theta = 45
+r_theta = 120
+l_r = 0.75
+r_r = 0.6
 
 # Define stack
 stack = []
 second_stack = []
 
 # Trunk
+turtle.penup()
 turtle.fd(x)
+turtle.pendown()
 append_2_stack(stack)
 l_x, r_x = x, x
 for _ in range(n):
