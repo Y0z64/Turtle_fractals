@@ -1,71 +1,104 @@
 import turtle
 
-def reset(x, hd):
-    turtle.penup()
-    turtle.goto(x)
-    turtle.pendown()
-    turtle.seth(hd)
+class Stack:
+    def __init__(self):
+        self.stack1 = []
+        self.stack2 = []
+        pass
+    
+    def __len__(self) -> int:
+        return self.stack1.__len__()
 
-def append_2_stack(stack):
-    stack.append((turtle.pos(), turtle.heading()))
+    def append_2_stack(self, foo) -> None:
+        self.stack2.append(foo)
 
-def segment(stack, stack_2, l_leng, r_leng, l_theta, r_theta):
-    x, dir = stack.pop(-1)
-    reset(x, dir)
+    def pop_stack(self) -> tuple[tuple[float, float], float]:
+        position, direction = self.stack1.pop(-1)
+        return (position, direction)
 
-    turtle.left(l_theta)
-    turtle.fd(l_leng)
-    append_2_stack(stack_2)
+    def reverse_stacks(self) -> None:
+        self.stack1, self.stack2 = self.stack2, self.stack1
 
-    reset(x, dir)
+class Fractal:
+    def __init__(self, height:int, width: int, home: bool = False, ini_dir: float = 90, offset: float = 0) -> None:
+        self.HEIGHT = height
+        self.WIDTH = width
 
-    turtle.right(r_theta)
-    turtle.fd(r_leng)
-    append_2_stack(stack_2)
+        self.turtle = turtle.Turtle()
+        self.stack: Stack = Stack()
+        self.turtle.seth(ini_dir)
+
+        if home:
+            self.silent_goto((0, (-self.HEIGHT/2)+offset), ini_dir)
+    
+    def display_trunk(self, length: float,  trunk: bool = True):
+        if trunk:
+            self.turtle.fd(length)
+        else:
+            self.turtle.penup()
+            self.turtle.fd(length)
+            self.turtle.pendown()
+
+    def get_vector(self) -> tuple[tuple[float, float], float]:
+        position = self.turtle.pos() 
+        direction = self.turtle.heading()
+        return (position, direction)
 
     
+    def silent_goto(self, pos: tuple[float, float], dir: float) -> None:
+        self.turtle.penup()
+        self.turtle.goto(pos)
+        self.turtle.pendown()
+        self.turtle.setheading(dir)
 
-# Setup
-WIDTH = 900
-HEIGHT = 900
+    def segment(self, l_leng: float,  r_leng: float, l_theta: float, r_theta: float) -> None:
+        position, direction = self.stack.pop_stack()
+        self.silent_goto(position, direction)
 
-turtle.setup(WIDTH, HEIGHT)
-turtle.penup()
-turtle.goto(0, -HEIGHT/2+200)
-turtle.pendown()
-turtle.seth(90)
+        self.turtle.left(l_theta)
+        self.turtle.fd(l_leng)
+        self.stack.append_2_stack(self.get_vector())
+
+        self.silent_goto(position, direction)
+
+        self.turtle.right(r_theta)
+        self.turtle.fd(r_leng)
+        self.stack.append_2_stack(self.get_vector())
+
+    def generate_fractal(self, n: int, seg_length: float, left_ratio: float, right_ratio: float, left_theta: float, right_theta: float,  trunk: bool = True) -> None:
+        self.display_trunk(seg_length, trunk)
+        self.stack.append_2_stack(self.get_vector())
+
+        l_x, r_x = seg_length, seg_length
+        for _ in range(n):
+            if len(self.stack) == 0:
+                self.stack.reverse_stacks()
+                l_x = l_x * left_ratio
+                r_x = r_x * right_ratio
+            for _ in range(len(self.stack)):
+                self.segment(l_x*left_ratio, r_x*right_ratio, left_theta, right_theta)
+
+if __name__ == "__main__":
+    #Setup
+    HEIGHT = 900
+    WIDTH = 900
+
+    #Parameters
+    n = 13
+    x = 300
+    l_r = 0.7
+    r_r = 0.7
+    l_theta = 20
+    r_theta = 90
+
+    turtle.tracer(0 ,0)
+    myFractal = Fractal(HEIGHT, WIDTH, True, offset=100)
+    myFractal.generate_fractal(n, x, l_r, r_r, l_theta, r_theta, True)
+    turtle.update()
+    turtle.exitonclick()
 
 
-# Code here
-turtle.tracer(0, 0)
-
-turtle.seth(90)
-n = 13
-x = 250
-l_theta = 45
-r_theta = 120
-l_r = 0.75
-r_r = 0.6
-
-# Define stack
-stack = []
-second_stack = []
-
-# Trunk
-turtle.penup()
-turtle.fd(x)
-turtle.pendown()
-append_2_stack(stack)
-l_x, r_x = x, x
-for _ in range(n):
-    if len(stack) == 0:
-        stack, second_stack = second_stack, stack
-        l_x = l_x * l_r # Try modifying this so it does not multiply l_x but x
-        r_x = r_x * r_r # same here
-    for _ in range(len(stack)):
-        segment(stack, second_stack, l_x*l_r, r_x*r_r, l_theta, r_theta)
 
 
-turtle.update()
 
-turtle.exitonclick()
+
