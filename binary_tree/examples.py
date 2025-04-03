@@ -9,18 +9,12 @@ def hidden_fd(x):
 
 # Create an instance of FractalTree
 tree = FractalTree()
-tree.setup()
-
+tree.setup(skip=True)
 
 def regular_tree():
     # Up tree
-    n = 5
-    sequence = tree.builder(n)
-    print(sequence)
-    tree.runner(sequence, 30, 27)
-
-
-# End
+    n = 14
+    tree.draw_tree(n, 40, 27)
 
 # The commented examples can be uncommented and modified to use the FractalTree class like this:
 

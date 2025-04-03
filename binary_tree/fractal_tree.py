@@ -1,4 +1,5 @@
 import turtle
+import typing
 
 class FractalTree:
     def __init__(self, screen=None):
@@ -12,7 +13,7 @@ class FractalTree:
         self.t.speed(0)  # Fastest speed
         self.stack = []  # Stack for storing positions and directions
     
-    def leaf(self, x):
+    def leaf(self, x: int):
         """Draw a leaf structure of size x"""
         x = x / 2
         self.t.fd(x)
@@ -24,7 +25,7 @@ class FractalTree:
         """Draw a branch of size x"""
         self.t.fd(x)
     
-    def runner(self, sequence, x, r):
+    def runner(self, sequence: list, x: int, r: float) -> None:
         """
         Execute the L-system sequence
         
@@ -34,7 +35,6 @@ class FractalTree:
             r: Rotation angle in degrees
         """
         # Start heading upright
-        self.t.left(90)
         
         # Clear the stack at the beginning
         self.stack = []
@@ -66,7 +66,7 @@ class FractalTree:
         
         self.exit()
     
-    def builder(self, n):
+    def builder(self, n: int):
         """
         Build the L-system sequence for n iterations
         
@@ -103,7 +103,7 @@ class FractalTree:
         # At the end return the last defined sequence
         return sequence
     
-    def draw_tree(self, iterations, x, r, print=False):
+    def draw_tree(self, iterations: int, x: int, r: float, print: bool=False):
         """
         Main method to draw the fractal tree
         
@@ -112,8 +112,10 @@ class FractalTree:
             x: Length of the branches
             r: Angle of rotation in degrees
         """
-        # Reset position
+        # Reset position and head upwards
         self.t.home()
+        self.t.left(90)
+        
         
         # Build the L-system sequence
         sequence = self.builder(iterations)
